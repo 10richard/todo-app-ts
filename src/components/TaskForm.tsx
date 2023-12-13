@@ -95,7 +95,7 @@ const TaskForm = ({ heading, task }: TaskFormProps) => {
     );
   };
 
-  const handleTags = (val: string[]) => {
+  const handleTags = (val: string) => {
     setTags(val.toString().split(", "));
   };
 
@@ -155,7 +155,7 @@ const TaskForm = ({ heading, task }: TaskFormProps) => {
         <FormInputContainer
           heading={"Subtasks"}
           value={!tags ? "" : tags.join(", ")}
-          handleChange={(val) => handleTags(val.split(", "))}
+          handleChange={handleTags}
           placeholder={"Tag1, Tag2, Tag3, ..."}
         />
         <button
