@@ -1,4 +1,9 @@
-const TaskTagsInput = ({ opt, handleChange }) => {
+interface TaskTagsInput {
+  opt: string;
+  handleChange: (opt: string) => void;
+}
+
+const TaskTagsInput = ({ opt, handleChange }: TaskTagsInput) => {
   return (
     <label className="flex justify-between p-3 text-xs">
       {opt}

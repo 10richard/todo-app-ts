@@ -1,13 +1,23 @@
 import { useState } from "react";
 import TaskTagsInput from "./TaskTagsInput";
 
-const TaskTagsFilter = ({ opts, setTags, filteredTags }) => {
+interface TaskTagsFilterProps {
+  opts: string[];
+  setTags: React.Dispatch<React.SetStateAction<string[]>>;
+  filteredTags: string[];
+}
+
+const TaskTagsFilter = ({
+  opts,
+  setTags,
+  filteredTags,
+}: TaskTagsFilterProps) => {
   const [toggle, setToggle] = useState(false);
 
-  const handleChange = (opt) => {
+  const handleChange = (opt: string) => {
     let newTags = [];
     if (filteredTags.includes(opt)) {
-      newTags = filteredTags.filter((t) => t !== opt);
+      newTags = filteredTags.filter((t: string) => t !== opt);
     } else {
       newTags = [...filteredTags, opt];
     }
@@ -39,12 +49,7 @@ const TaskTagsFilter = ({ opts, setTags, filteredTags }) => {
       <div className={`${toggle ? "" : "hidden"}`}>
         <div className="flex flex-col w-full rounded-2xl shadow-md absolute z-40 bg-white">
           {opts.map((opt, idx) => (
-            <TaskTagsInput
-              key={idx}
-              opt={opt}
-              handleChange={handleChange}
-              filteredTags={filteredTags}
-            />
+            <TaskTagsInput key={idx} opt={opt} handleChange={handleChange} />
           ))}
         </div>
       </div>

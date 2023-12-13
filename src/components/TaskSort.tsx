@@ -1,6 +1,11 @@
 import { useState } from "react";
 
-const TaskSort = ({ handleOpt, currentOpt }) => {
+interface TaskSortProps {
+  handleOpt: React.Dispatch<React.SetStateAction<string>>;
+  currentOpt: string;
+}
+
+const TaskSort = ({ handleOpt, currentOpt }: TaskSortProps) => {
   const [toggle, setToggle] = useState(false);
   const sortOpts = {
     0: "Default",

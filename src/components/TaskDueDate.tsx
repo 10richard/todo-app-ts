@@ -1,6 +1,12 @@
 import moment from "moment";
 
-const TaskDueDate = ({ date, time, color }) => {
+interface TaskDueDateProps {
+  date: string;
+  time: string;
+  color: string;
+}
+
+const TaskDueDate = ({ date, time, color }: TaskDueDateProps) => {
   if (!date) return <p>Due Date: </p>;
 
   const parseDueDate = new Date(`${date}:${time}`);

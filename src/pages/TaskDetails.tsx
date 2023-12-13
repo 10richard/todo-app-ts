@@ -8,10 +8,10 @@ import TaskSubtasks from "../components/TaskSubtasks";
 import ProgressBar from "../components/ProgressBar";
 
 const TaskDetails = () => {
-  const { id } = useParams();
+  const { id } = useParams<string>();
   const { completeSubtask, removeTask, repeatSubtasks, getTask, checkDueDate } =
     useTask();
-  const task = getTask(id);
+  const task = id ? getTask(id) : null;
 
   if (!task) {
     return (

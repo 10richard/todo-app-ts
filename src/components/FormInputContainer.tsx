@@ -1,4 +1,16 @@
-const FormInputContainer = ({ heading, value, handleChange, placeholder }) => {
+interface FormInputContainerProps {
+  heading: string;
+  value: string;
+  handleChange: (val: string) => void;
+  placeholder: string;
+}
+
+const FormInputContainer = ({
+  heading,
+  value,
+  handleChange,
+  placeholder,
+}: FormInputContainerProps) => {
   return (
     <div className="flex flex-col gap-2 w-full">
       <h1 className="text-lg">{heading}</h1>

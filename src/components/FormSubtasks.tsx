@@ -1,6 +1,24 @@
 import { useState } from "react";
 
-const FormSubtasks = ({ subtasks, handleAdd, handleEdit, handleRemove }) => {
+interface SubtaskData {
+  subtask: string;
+  isCompleted: boolean;
+  id: string;
+}
+
+interface FormSubtasksProps {
+  subtasks: SubtaskData[];
+  handleAdd: (subtask: string) => void;
+  handleEdit: (id: string, value: string) => void;
+  handleRemove: (id: string) => void;
+}
+
+const FormSubtasks = ({
+  subtasks,
+  handleAdd,
+  handleEdit,
+  handleRemove,
+}: FormSubtasksProps) => {
   const [subtask, setSubtask] = useState("");
 
   return (

@@ -1,4 +1,8 @@
-const SearchBar = ({ handleSearch }) => {
+interface SearchBarProps {
+  handleSearch: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const SearchBar = ({ handleSearch }: SearchBarProps) => {
   return (
     <div className="flex max-w-[500px] relative w-5/6">
       <svg

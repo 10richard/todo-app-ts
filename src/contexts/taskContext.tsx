@@ -1,33 +1,85 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { uid } from "uid";
 import { useNavigate } from "react-router-dom";
 import moment from "moment";
 
-export const TaskContext = createContext();
-
-export function useTask() {
-  return useContext(TaskContext);
+interface TaskData {
+  title: string;
+  isCompleted: boolean;
+  priorityLevel: number;
+  complexityLevel: number;
+  dueDate: string;
+  dueTime: string;
+  subtasks: SubtaskData[];
+  tags: string[];
+  id: string;
 }
 
-export const TaskProvider = ({ children }) => {
-  const storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-  const [tasks, setTasks] = useState(storedTasks);
+interface SubtaskData {
+  subtask: string;
+  isCompleted: boolean;
+  id: string;
+}
+
+type TaskContextProps = {
+  tasks: TaskData[];
+  addTask: (task: TaskData) => void;
+  editTask: (task: TaskData, updatedTask: TaskData) => void;
+  completeTask: (task: TaskData) => void;
+  completeSubtask: (task: TaskData, subtask: SubtaskData) => void;
+  repeatSubtasks: (task: TaskData) => void;
+  removeTask: (task: TaskData) => void;
+  getTask: (id: string) => TaskData | undefined;
+  checkDueDate: (dueDate: string, lightColor: boolean) => string;
+  getCompletedSubtasksPercentage: (subtasks: SubtaskData[]) => string;
+  getTaskTags: () => string[];
+  sortTasks: (tasks: TaskData[], sort: string[]) => TaskData[];
+};
+
+export const TaskContext = createContext<TaskContextProps | undefined>(
+  undefined
+);
+
+export function useTask() {
+  const context = useContext(TaskContext);
+  if (!context) {
+    throw new Error("useTaskContext must be used within a TaskProvider");
+  }
+  return context;
+}
+
+export const TaskProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const storedTasksRaw = localStorage.getItem("tasks");
+  const storedTasks: TaskData[] = storedTasksRaw
+    ? JSON.parse(storedTasksRaw)
+    : [];
+  const [tasks, setTasks] = useState<TaskData[]>(storedTasks);
   const navigate = useNavigate();
 
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  const addTask = (title, priority, complexity, date, time, subtasks, tags) => {
+  const addTask = ({
+    title,
+    priorityLevel,
+    complexityLevel,
+    dueDate,
+    dueTime,
+    subtasks,
+    tags,
+  }: TaskData) => {
     const newTasks = [
       ...tasks,
       {
         title,
         isCompleted: false,
-        priorityLevel: priority,
-        complexityLevel: complexity,
-        dueDate: date,
-        dueTime: time,
+        priorityLevel: priorityLevel,
+        complexityLevel: complexityLevel,
+        dueDate: dueDate,
+        dueTime: dueTime,
         subtasks: subtasks,
         tags: tags,
         id: uid(),
@@ -38,25 +90,27 @@ export const TaskProvider = ({ children }) => {
   };
 
   const editTask = (
-    task,
-    title,
-    priority,
-    complexity,
-    date,
-    time,
-    subtasks,
-    tags
+    task: TaskData,
+    {
+      title,
+      priorityLevel,
+      complexityLevel,
+      dueDate,
+      dueTime,
+      subtasks,
+      tags,
+    }: TaskData
   ) => {
-    setTasks((tasks) =>
+    setTasks((tasks: TaskData[]) =>
       tasks.map((t) =>
         t.id === task.id
           ? {
               ...t,
               title,
-              priorityLevel: priority,
-              complexityLevel: complexity,
-              dueDate: date,
-              dueTime: time,
+              priorityLevel: priorityLevel,
+              complexityLevel: complexityLevel,
+              dueDate: dueDate,
+              dueTime: dueTime,
               subtasks: subtasks,
               tags: tags,
             }
@@ -66,16 +120,16 @@ export const TaskProvider = ({ children }) => {
     navigate("/");
   };
 
-  const completeTask = (task) => {
-    setTasks((tasks) =>
+  const completeTask = (task: TaskData) => {
+    setTasks((tasks: TaskData[]) =>
       tasks.map((t) =>
         t.id === task.id ? { ...t, isCompleted: !t.isCompleted } : t
       )
     );
   };
 
-  const completeSubtask = (task, subtask) => {
-    const newTasks = tasks.map((t) => {
+  const completeSubtask = (task: TaskData, subtask: SubtaskData) => {
+    const newTasks = tasks.map((t: TaskData) => {
       if (t.id === task.id) {
         const subtasks = t.subtasks.map((s) =>
           s.id === subtask.id ? { ...s, isCompleted: !s.isCompleted } : s
@@ -87,11 +141,11 @@ export const TaskProvider = ({ children }) => {
     setTasks(newTasks);
   };
 
-  const repeatSubtasks = (task) => {
-    const newTasks = tasks.map((t) => {
+  const repeatSubtasks = (task: TaskData) => {
+    const newTasks: TaskData[] = tasks.map((t) => {
       if (t.id === task.id) {
-        const subtasks = t.subtasks.map((s) =>
-          s ? { ...s, isCompleted: false } : ""
+        const subtasks = t.subtasks.map(
+          (s: SubtaskData) => s && { ...s, isCompleted: false }
         );
         return { ...t, subtasks };
       }
@@ -100,16 +154,16 @@ export const TaskProvider = ({ children }) => {
     setTasks(newTasks);
   };
 
-  const removeTask = (task) => {
+  const removeTask = (task: TaskData) => {
     setTasks((tasks) => tasks.filter((t) => t.id !== task.id));
     navigate("/");
   };
 
-  const getTask = (id) => {
+  const getTask = (id: string) => {
     return tasks.find((task) => task.id === id);
   };
 
-  const checkDueDate = (dueDate, lightColor) => {
+  const checkDueDate = (dueDate: string, lightColor: boolean) => {
     const taskDueDate = moment(dueDate, "YYYY-MM-DD");
     const currentDate = moment();
     const difference = taskDueDate.diff(currentDate, "days");
@@ -122,7 +176,7 @@ export const TaskProvider = ({ children }) => {
     return lightColor ? "#D6EAFF" : "#51AEFF";
   };
 
-  const getCompletedSubtasksPercentage = (subtasks) => {
+  const getCompletedSubtasksPercentage = (subtasks: SubtaskData[]) => {
     if (subtasks === undefined || subtasks.length == 0) return "0";
 
     const completedCount = subtasks.filter(
@@ -134,13 +188,13 @@ export const TaskProvider = ({ children }) => {
 
   const getTaskTags = () => {
     const uniqueTags = tasks
-      .filter((t) => t.tags)
-      .map((t) => t.tags)
+      .filter((t: TaskData) => t.tags)
+      .map((t: TaskData) => t.tags)
       .flat();
     return [...new Set(uniqueTags)];
   };
 
-  const sortTasks = (tasks, sort) => {
+  const sortTasks = (tasks: TaskData[], sort: string[]) => {
     let sortOrder = tasks;
 
     if (sort[1] === "Date") {

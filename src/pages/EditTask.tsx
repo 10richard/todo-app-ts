@@ -3,9 +3,9 @@ import { useParams } from "react-router-dom";
 import { useTask } from "../contexts/taskContext";
 
 const EditTask = () => {
-  const { id } = useParams();
+  const { id } = useParams<string>();
   const { getTask } = useTask();
-  const task = getTask(id);
+  const task = id ? getTask(id) : null;
 
   return (
     <div className="flex flex-col items-center">

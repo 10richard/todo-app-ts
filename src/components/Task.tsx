@@ -6,7 +6,19 @@ import TaskDueDate from "./TaskDueDate";
 import { CircularProgressbar } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 
-const Task = ({ task }) => {
+interface TaskData {
+  title: string;
+  isCompleted: boolean;
+  priorityLevel: number;
+  complexityLevel: number;
+  dueDate: string;
+  dueTime: string;
+  subtasks: { subtask: string; isCompleted: boolean; id: string }[];
+  tags: string[];
+  id: string;
+}
+
+const Task = ({ task }: { task: TaskData }) => {
   const { completeTask, checkDueDate, getCompletedSubtasksPercentage } =
     useTask();
   const normalColor = checkDueDate(task.dueDate, false);
@@ -82,7 +94,7 @@ const Task = ({ task }) => {
       </div>
       <div className="absolute right-8 bottom-10 w-11 h-11">
         <CircularProgressbar
-          value={percentCompleted}
+          value={parseInt(percentCompleted)}
           text={`${percentCompleted}%`}
           styles={{
             path: {

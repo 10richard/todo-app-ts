@@ -1,6 +1,23 @@
 import { Link } from "react-router-dom";
 
-const Header = ({ heading, task }) => {
+interface TaskData {
+  title: string;
+  isCompleted: boolean;
+  priorityLevel: number;
+  complexityLevel: number;
+  dueDate: string;
+  dueTime: string;
+  subtasks: { subtask: string; isCompleted: boolean; id: string }[];
+  tags: string[];
+  id: string;
+}
+
+interface HeaderProps {
+  heading: string;
+  task: TaskData;
+}
+
+const Header = ({ heading, task }: HeaderProps) => {
   return (
     <div className="flex items-center justify-between relative">
       <Link to="/" className="bg-white p-3 rounded-full">

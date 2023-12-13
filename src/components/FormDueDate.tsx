@@ -1,4 +1,16 @@
-const FormDueDate = ({ date, handleDate, time, handleTime }) => {
+interface FormDueDateProps {
+  date: string;
+  handleDate: React.Dispatch<React.SetStateAction<string>>;
+  time: string;
+  handleTime: React.Dispatch<React.SetStateAction<string>>;
+}
+
+const FormDueDate = ({
+  date,
+  handleDate,
+  time,
+  handleTime,
+}: FormDueDateProps) => {
   return (
     <div className="flex justify-between gap-8 w-full">
       <div className="w-full">

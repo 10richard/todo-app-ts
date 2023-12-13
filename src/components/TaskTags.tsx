@@ -1,4 +1,9 @@
-const TaskTags = ({ tags, color }) => {
+interface TaskTagsProps {
+  tags: string[];
+  color: string;
+}
+
+const TaskTags = ({ tags, color }: TaskTagsProps) => {
   return (
     <>
       <div className="flex gap-1">

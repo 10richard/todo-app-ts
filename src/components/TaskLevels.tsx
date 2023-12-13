@@ -1,7 +1,12 @@
 // Display priority and complexity - (low = 1 - 4, moderate = 5 - 7, high = 8 - 10)
 
-const TaskLevels = ({ category, level }) => {
-  const checkLevel = (level) => {
+interface TaskLevelsProps {
+  category: string;
+  level: number;
+}
+
+const TaskLevels = ({ category, level }: TaskLevelsProps) => {
+  const checkLevel = (level: number) => {
     if (level >= 0 && level <= 4) {
       return "Low";
     }

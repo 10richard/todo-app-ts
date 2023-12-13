@@ -1,4 +1,14 @@
-const FormLevelsContainer = ({ category, handleChange, value }) => {
+interface FormLevelsContainerProps {
+  category: string;
+  handleChange: (val: number) => void;
+  value: number;
+}
+
+const FormLevelsContainer = ({
+  category,
+  handleChange,
+  value,
+}: FormLevelsContainerProps) => {
   const levels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
   return (

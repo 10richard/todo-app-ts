@@ -6,15 +6,27 @@ import SearchBar from "../components/SearchBar";
 import TaskSort from "../components/TaskSort";
 import TaskTagsFilter from "../components/TaskTagsFilter";
 
+interface TaskData {
+  title: string;
+  isCompleted: boolean;
+  priorityLevel: number;
+  complexityLevel: number;
+  dueDate: string;
+  dueTime: string;
+  subtasks: { subtask: string; isCompleted: boolean; id: string }[];
+  tags: string[];
+  id: string;
+}
+
 const Tasks = () => {
   const { tasks, getTaskTags, sortTasks } = useTask();
-  const [search, setSearch] = useState("");
-  const [sortOpt, setSortOpt] = useState("Default");
-  const [filteredTags, setFilteredTags] = useState([]);
+  const [search, setSearch] = useState<string>("");
+  const [sortOpt, setSortOpt] = useState<string>("Default");
+  const [filteredTags, setFilteredTags] = useState<string[]>([]);
 
   const tagOpts = getTaskTags();
 
-  const filterTaskByTag = (task) => {
+  const filterTaskByTag = (task: TaskData) => {
     if (filteredTags === undefined || filteredTags.length == 0) return true;
 
     return task.tags.some((tag) => filteredTags.includes(tag));

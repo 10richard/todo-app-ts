@@ -1,4 +1,32 @@
-const TaskSubtasks = ({ task, subtasks, completeSubtask }) => {
+interface TaskData {
+  title: string;
+  isCompleted: boolean;
+  priorityLevel: number;
+  complexityLevel: number;
+  dueDate: string;
+  dueTime: string;
+  subtasks: { subtask: string; isCompleted: boolean; id: string }[];
+  tags: string[];
+  id: string;
+}
+
+interface SubtaskData {
+  subtask: string;
+  isCompleted: boolean;
+  id: string;
+}
+
+interface TaskSubtasksProps {
+  task: TaskData;
+  subtasks: SubtaskData[];
+  completeSubtask: (task: TaskData, subtask: SubtaskData) => void;
+}
+
+const TaskSubtasks = ({
+  task,
+  subtasks,
+  completeSubtask,
+}: TaskSubtasksProps) => {
   return (
     <div>
       <h1 className="text-lg mb-3">Subtasks checklist:</h1>

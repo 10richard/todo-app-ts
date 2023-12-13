@@ -7,48 +7,75 @@ import FormInputContainer from "./FormInputContainer";
 import FormSubtasks from "./FormSubtasks";
 import FormDueDate from "./FormDueDate";
 
-const TaskForm = ({ heading, task }) => {
-  const [title, setTitle] = useState(!task ? "" : task.title);
-  const [priority, setPriority] = useState(!task ? 0 : task.priorityLevel);
-  const [complexity, setComplexity] = useState(
+interface TaskData {
+  title: string;
+  isCompleted: boolean;
+  priorityLevel: number;
+  complexityLevel: number;
+  dueDate: string;
+  dueTime: string;
+  subtasks: { subtask: string; isCompleted: boolean; id: string }[];
+  tags: string[];
+  id: string;
+}
+
+interface SubtaskData {
+  subtask: string;
+  isCompleted: boolean;
+  id: string;
+}
+
+interface TaskFormProps {
+  heading: string;
+  task?: TaskData | null;
+}
+
+const TaskForm = ({ heading, task }: TaskFormProps) => {
+  const [title, setTitle] = useState<string>(!task ? "" : task.title);
+  const [priority, setPriority] = useState<number>(
+    !task ? 0 : task.priorityLevel
+  );
+  const [complexity, setComplexity] = useState<number>(
     !task ? 0 : task.complexityLevel
   );
-  const [dueDate, setDueDate] = useState(!task ? "" : task.dueDate);
-  const [dueTime, setDueTime] = useState(
+  const [dueDate, setDueDate] = useState<string>(!task ? "" : task.dueDate);
+  const [dueTime, setDueTime] = useState<string>(
     !task || task.dueTime === "" ? "00:00" : task.dueTime
   );
-  const [subtasks, setSubtasks] = useState(!task ? [] : task.subtasks);
-  const [tags, setTags] = useState(!task ? [] : task.tags);
+  const [subtasks, setSubtasks] = useState<SubtaskData[]>(
+    !task ? [] : task.subtasks
+  );
+  const [tags, setTags] = useState<string[]>(!task ? [] : task.tags);
 
   const { addTask, editTask } = useTask();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
     if (!title) return;
 
-    !task
-      ? addTask(title, priority, complexity, dueDate, dueTime, subtasks, tags)
-      : editTask(
-          task,
-          title,
-          priority,
-          complexity,
-          dueDate,
-          dueTime,
-          subtasks,
-          tags
-        );
+    const taskData: TaskData = {
+      title,
+      priorityLevel: priority,
+      complexityLevel: complexity,
+      dueDate,
+      dueTime,
+      subtasks,
+      tags,
+      isCompleted: false,
+      id: uid(),
+    };
+
+    !task ? addTask(taskData) : editTask(task, taskData);
   };
 
-  const handlePriorityLevel = (val) => {
+  const handlePriorityLevel = (val: number) => {
     setPriority(val);
   };
 
-  const handleComplexityLevel = (val) => {
+  const handleComplexityLevel = (val: number) => {
     setComplexity(val);
   };
 
-  const handleAddSubtask = (subtask) => {
+  const handleAddSubtask = (subtask: string) => {
     if (!subtask) return;
 
     const newSubtasks = [
@@ -58,17 +85,17 @@ const TaskForm = ({ heading, task }) => {
     setSubtasks(newSubtasks);
   };
 
-  const handleRemoveSubtask = (id) => {
+  const handleRemoveSubtask = (id: string) => {
     setSubtasks(subtasks.filter((s) => s.id !== id));
   };
 
-  const handleEditSubtask = (id, value) => {
+  const handleEditSubtask = (id: string, value: string) => {
     setSubtasks((subtasks) =>
-      subtasks.map((s) => (s.id === id ? { subtask: value } : s))
+      subtasks.map((s) => (s.id === id ? { ...s, subtask: value } : s))
     );
   };
 
-  const handleTags = (val) => {
+  const handleTags = (val: string[]) => {
     setTags(val.toString().split(", "));
   };
 
@@ -122,13 +149,13 @@ const TaskForm = ({ heading, task }) => {
         <FormSubtasks
           subtasks={subtasks}
           handleAdd={handleAddSubtask}
-          handleEdit={handleEditSubtask}
+          handleEdit={(id, value) => handleEditSubtask(id, value)}
           handleRemove={handleRemoveSubtask}
         />
         <FormInputContainer
           heading={"Subtasks"}
           value={!tags ? "" : tags.join(", ")}
-          handleChange={handleTags}
+          handleChange={(val) => handleTags(val.split(", "))}
           placeholder={"Tag1, Tag2, Tag3, ..."}
         />
         <button
