@@ -1,16 +1,5 @@
 import { Link } from "react-router-dom";
-
-interface TaskData {
-  title: string;
-  isCompleted: boolean;
-  priorityLevel: number;
-  complexityLevel: number;
-  dueDate: string;
-  dueTime: string;
-  subtasks: { subtask: string; isCompleted: boolean; id: string }[];
-  tags: string[];
-  id: string;
-}
+import { TaskData } from "../interfaces/taskInterfaces";
 
 interface HeaderProps {
   heading: string;

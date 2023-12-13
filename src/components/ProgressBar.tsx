@@ -1,14 +1,9 @@
 import { useTask } from "../contexts/taskContext";
+import { SubtaskData } from "../interfaces/taskInterfaces";
 
 interface PrograssBarProps {
   subtasks: SubtaskData[];
   color: string;
-}
-
-interface SubtaskData {
-  subtask: string;
-  isCompleted: boolean;
-  id: string;
 }
 
 const ProgressBar = ({ subtasks, color }: PrograssBarProps) => {

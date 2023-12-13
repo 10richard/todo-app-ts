@@ -1,5 +1,3 @@
-// Display priority and complexity - (low = 1 - 4, moderate = 5 - 7, high = 8 - 10)
-
 interface TaskLevelsProps {
   category: string;
   level: number;

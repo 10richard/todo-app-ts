@@ -1,10 +1,5 @@
 import { useState } from "react";
-
-interface SubtaskData {
-  subtask: string;
-  isCompleted: boolean;
-  id: string;
-}
+import { SubtaskData } from "../interfaces/taskInterfaces";
 
 interface FormSubtasksProps {
   subtasks: SubtaskData[];

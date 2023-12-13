@@ -6,24 +6,7 @@ import FormLevelsContainer from "./FormLevelsContainer";
 import FormInputContainer from "./FormInputContainer";
 import FormSubtasks from "./FormSubtasks";
 import FormDueDate from "./FormDueDate";
-
-interface TaskData {
-  title: string;
-  isCompleted: boolean;
-  priorityLevel: number;
-  complexityLevel: number;
-  dueDate: string;
-  dueTime: string;
-  subtasks: { subtask: string; isCompleted: boolean; id: string }[];
-  tags: string[];
-  id: string;
-}
-
-interface SubtaskData {
-  subtask: string;
-  isCompleted: boolean;
-  id: string;
-}
+import { TaskData, SubtaskData } from "../interfaces/taskInterfaces";
 
 interface TaskFormProps {
   heading: string;
